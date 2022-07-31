@@ -11,7 +11,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -32,7 +31,7 @@ class SimpleEmailServiceTest {
                 .mailTo("test@test.com")
                 .subject("Test")
                 .message("Test Message")
-                .toCc(Optional.of("Test Cc"))
+                .toCc("Test CC")
                 .build();
 
 
@@ -40,12 +39,12 @@ class SimpleEmailServiceTest {
         mailMessage.setTo(mail.getMailTo());
         mailMessage.setSubject(mail.getSubject());
         mailMessage.setText(mail.getMessage());
-        if (mail.getToCc().isPresent()) {
-            mailMessage.setCc(mail.getToCc().get());
+
+        Optional<String> toCC = Optional.ofNullable(mail.getToCc());
+        toCC.ifPresent(n -> mailMessage.setCc(n));
             //When
             simpleEmailService.send(mail);
             //Then
             verify(javaMailSender, times(1)).send(mailMessage);
         }
-    }
 }
