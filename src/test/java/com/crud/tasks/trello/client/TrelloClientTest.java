@@ -40,7 +40,7 @@ class TrelloClientTest {
         when(trelloConfig.getTrelloUser()).thenReturn("test");
 
         TrelloBoardDto[] trelloBoard= new TrelloBoardDto[1];
-        trelloBoard[0]= new TrelloBoardDto("test_board", "test_id", new ArrayList<>());
+        trelloBoard[0]= new TrelloBoardDto("test_id", "test_board", new ArrayList<>());
         URI uri= new URI("http://test.com/members/test/boards?key=test&token=test&fields=name,id&lists=all");
 
         when(restTemplate.getForObject(uri, TrelloBoardDto[].class)).thenReturn(trelloBoard);
