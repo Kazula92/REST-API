@@ -94,4 +94,26 @@ class TaskControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", Matchers.is("content")));
     }
 
+    @Test
+    void shouldCreateTask() throws Exception {
+        // Given
+        Task task = new Task(1L, "test", "test");
+        TaskDto taskDto = new TaskDto(1L, "testDto", "testDto");
+
+        when(taskMapper.mapToTask(any(TaskDto.class))).thenReturn(task);
+        when(dbService.saveTask(task)).thenReturn(task);
+        when(taskMapper.mapToTaskDto(any(Task.class))).thenReturn(taskDto);
+        Gson gson = new Gson();
+        String jsonContent = gson.toJson(taskDto);
+
+        // When & Then
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .post("/v1/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(jsonContent))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+    }
 }
